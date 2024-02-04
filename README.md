@@ -1,1 +1,1 @@
-# todoList_redus-js
+# todoList_with_redux_vanillajs
