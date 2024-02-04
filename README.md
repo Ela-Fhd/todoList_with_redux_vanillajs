@@ -4,7 +4,6 @@
 ![demo](https://github.com/Ela-Fhd/todoList_with_redux_vanillajs/blob/main/assets/demo/demo-2.png)
 ![demo](https://github.com/Ela-Fhd/todoList_with_redux_vanillajs/blob/main/assets/demo/demo-3.png)
 
-
   - &#128204;<a href="https://todolist-with-redux-and-js.netlify.app/" >Demo</a>
   - 🙋‍♀️Developed by Elahe Fahmideh
   - 📆Created : February 2024
