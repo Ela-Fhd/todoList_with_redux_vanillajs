@@ -13,8 +13,8 @@ const container = document.querySelector(".todo-container");
 
 // filter btns
 const allTodos = document.querySelector(".all-todos");
-const incompleteTodos = document.querySelector(".incomplete-todos");
-const completeTodos = document.querySelector(".complete-todos");
+const incompleteTodosBtn = document.querySelector(".incomplete-todos");
+const completeTodosBtn = document.querySelector(".complete-todos");
 const todosState = document.querySelectorAll(".todos-state");
 
 // operation btns
@@ -24,6 +24,8 @@ const clearAll = document.querySelector(".clearAll-btn");
 const numAllTodos = document.querySelector(".all-number");
 const numCompletedTodos = document.querySelector(".completed-number");
 const numIncompletedTodos = document.querySelector(".incompleted-number");
+let completedTodos = null;
+let incompletedTodos = null;
 
 // pass active class between filter states
 todosState.forEach((todo) => {
@@ -33,14 +35,19 @@ todosState.forEach((todo) => {
   });
 });
 
-//load all todos
-window.addEventListener("load", () => {
+store.subscribe(() => {
   const todos = store.getState();
   numAllTodos.innerHTML = `(${todos.length})`;
-  const completedTodos = todos.filter((todo) => todo.isCompleted);
-  const incompletedTodos = todos.filter((todo) => !todo.isCompleted);
+  completedTodos = todos.filter((todo) => todo.isCompleted);
+  incompletedTodos = todos.filter((todo) => !todo.isCompleted);
   numCompletedTodos.innerHTML = `(${completedTodos.length})`;
   numIncompletedTodos.innerHTML = `(${incompletedTodos.length})`;
+});
+
+//load all todos
+window.addEventListener("load", () => {
+  store.dispatch(getAllTodo());
+  const todos = store.getState();
   generateTodos(todos);
 });
 
@@ -53,9 +60,6 @@ form.addEventListener("submit", (e) => {
   inputValue.value = "";
   const todos = store.getState();
   generateTodos(todos);
-  numAllTodos.innerHTML = `(${todos.length})`;
-  const incompletedTodos = todos.filter((todo) => !todo.isCompleted);
-  numIncompletedTodos.innerHTML = `(${incompletedTodos.length})`;
 });
 
 //clear all todos
@@ -63,11 +67,6 @@ clearAll.addEventListener("click", () => {
   store.dispatch(clearTodos());
   const todos = store.getState();
   generateTodos(todos);
-  numAllTodos.innerHTML = `(${todos.length})`;
-  const completedTodos = todos.filter((todo) => todo.isCompleted);
-  const incompletedTodos = todos.filter((todo) => !todo.isCompleted);
-  numCompletedTodos.innerHTML = `(${completedTodos.length})`;
-  numIncompletedTodos.innerHTML = `(${incompletedTodos.length})`;
 });
 
 //delete todo
@@ -75,30 +74,19 @@ const handleDeleteTodo = (todoId) => {
   store.dispatch(deleteTodo(todoId));
   const todos = store.getState();
   generateTodos(todos);
-  numAllTodos.innerHTML = `(${todos.length})`;
-  const completedTodos = todos.filter((todo) => todo.isCompleted);
-  const incompletedTodos = todos.filter((todo) => !todo.isCompleted);
-  numCompletedTodos.innerHTML = `(${completedTodos.length})`;
-  numIncompletedTodos.innerHTML = `(${incompletedTodos.length})`;
 };
 
 // bind handleDeleteTodo function to window
 window.handleDeleteTodo = handleDeleteTodo;
 
 //filter incomplete Todos
-incompleteTodos.addEventListener("click", () => {
-  store.dispatch(getAllTodo());
-  const todos = store.getState();
-  const incompleteTodos = todos.filter((todo) => !todo.isCompleted);
-  generateTodos(incompleteTodos);
+incompleteTodosBtn.addEventListener("click", () => {
+  generateTodos(incompletedTodos);
 });
 
 //filter complete Todos
-completeTodos.addEventListener("click", () => {
-  store.dispatch(getAllTodo());
-  const todos = store.getState();
-  const completeTodos = todos.filter((todo) => todo.isCompleted);
-  generateTodos(completeTodos);
+completeTodosBtn.addEventListener("click", () => {
+  generateTodos(completedTodos);
 });
 
 //show all todos
@@ -113,10 +101,6 @@ const handleCompleteTodo = (todoId) => {
   store.dispatch(completeTodo(todoId));
   const todos = store.getState();
   generateTodos(todos);
-  const completedTodos = todos.filter((todo) => todo.isCompleted);
-  const incompletedTodos = todos.filter((todo) => !todo.isCompleted);
-  numCompletedTodos.innerHTML = `(${completedTodos.length})`;
-  numIncompletedTodos.innerHTML = `(${incompletedTodos.length})`;
 };
 
 // bind handleCompleteTodo function to window
